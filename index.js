@@ -55,3 +55,27 @@ const questions = [
         message: "Would you like to add another employee?"
     }
 ]
+
+function init() {
+    inquirer.prompt(questions)
+        .then((answers) => {
+            if (answers.role === "Manager") {
+                const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
+                employees.push(manager)
+            } else if (answers.role === "Engineer") {
+                const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
+                employees.push(engineer)
+            } else if (answers.role === "Intern") {
+                const intern = new Intern(answers.name, answers.id, answers.email, answers.school)
+                employees.push(intern)
+            }
+            if (answers.addEmployee) {
+                init()
+            } else {
+                const html = generateHTML(employees)
+                fs.writeFileSync(path.join(__dirname, "dist", "index.html"), html)
+            }
+        })
+}
+
+init()
